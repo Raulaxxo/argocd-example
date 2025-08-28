@@ -46,6 +46,8 @@ Crea el namespace `argo-example` en tu clúster de Kubernetes:
 
 ```bash
 kubectl create namespace argo-example
+
+
 ```
 
 Luego puedes configurar la app desde la web de ArgoCD.
@@ -76,5 +78,6 @@ Luego puedes configurar la app desde la web de ArgoCD.
 4. Verifica el secreto creado en Kubernetes:
    ```bash
    kubectl get secret database-password -n default
+   
    ```
 

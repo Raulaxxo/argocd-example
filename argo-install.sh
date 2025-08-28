@@ -49,28 +49,9 @@ kubectl create namespace argocd || true
 echo "📌 Instalando Argo CD..."
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
-# --- Crear ServiceAccount con permisos de administrador ---
-echo "🔑 Creando ServiceAccount para Argo CD con acceso completo al cluster..."
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: argocd-manager
-  namespace: argocd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: argocd-manager-rolebinding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: argocd-manager
-  namespace: argocd
-EOF
+echo "🔑 Aplicando ServiceAccount 'argocd-manager' desde archivo YAML..."
+kubectl apply -f argocd-manager.yml
+echo "✅ ServiceAccount creado"
 
 # --- Obtener token del ServiceAccount ---
 ARGO_TOKEN=$(kubectl -n argocd get secret $(kubectl -n argocd get sa/argocd-manager -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode)
